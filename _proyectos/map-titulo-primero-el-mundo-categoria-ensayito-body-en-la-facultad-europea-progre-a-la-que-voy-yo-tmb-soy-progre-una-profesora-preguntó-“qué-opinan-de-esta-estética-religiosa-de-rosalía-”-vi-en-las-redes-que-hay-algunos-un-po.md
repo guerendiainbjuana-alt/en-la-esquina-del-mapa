@@ -1,5 +1,5 @@
 ---
-titulo: Primero, el mundo
+titulo: "#1 Primero, el mundo"
 categoria: ensayito
 ---
 En la facultad europea progre a la que voy (yo tmb soy progre) una profesora preguntó “qué opinan de esta estética religiosa de Rosalía?”. Vi en las redes que hay algunos un poco enojados.
