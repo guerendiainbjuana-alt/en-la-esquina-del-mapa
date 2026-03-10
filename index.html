@@ -294,7 +294,10 @@
       display: block;
     }
 
-    /* card positions — scattered organically across 6-col grid */
+    /* cards container — ocupa todo el grid salvo el centro */
+    #cards-container {
+      display: contents;
+    }
     .card-1 { grid-column: 1 / 3; grid-row: 1; transform: rotate(-1.8deg); align-self: end; }
     .card-2 { grid-column: 5 / 7; grid-row: 1; transform: rotate(2.5deg); margin-top: 2rem; }
     .card-3 { grid-column: 1 / 3; grid-row: 2; transform: rotate(1.2deg); margin-top: -1.5rem; }
@@ -491,51 +494,8 @@
     </nav>
   </div>
 
-  <!-- hojas dispersas -->
-  <a href="#" class="card card-1" data-cat="ensayo">
-    <span class="card-type">Ensayito</span>
-    <h3 class="card-title">Lo que no se puede decir sin rodeos</h3>
-    <span class="card-arrow">↗</span>
-  </a>
-
-  <a href="#" class="card card-2 card-img" data-cat="collage">
-    <div class="card-ph"></div>
-    <span class="card-caption">Collage sobre papel · 2024</span>
-  </a>
-
-  <a href="#" class="card card-3" data-cat="ficcion">
-    <span class="card-type">Ficción</span>
-    <h3 class="card-title">La mujer que coleccionaba silencios</h3>
-    <span class="card-arrow">↗</span>
-  </a>
-
-  <a href="#" class="card card-4 card-img" data-cat="dibujo">
-    <div class="card-ph"></div>
-    <span class="card-caption">Dibujo a tinta · 2024</span>
-  </a>
-
-  <a href="#" class="card card-5" data-cat="ficcion">
-    <span class="card-type">No-ficción</span>
-    <h3 class="card-title">Notas sobre leer en transporte público</h3>
-    <span class="card-arrow">↗</span>
-  </a>
-
-  <a href="#" class="card card-6 card-img" data-cat="collage">
-    <div class="card-ph"></div>
-    <span class="card-caption">Archivo encontrado · 2023</span>
-  </a>
-
-  <a href="#" class="card card-7" data-cat="ensayo">
-    <span class="card-type">Ensayito</span>
-    <h3 class="card-title">El gesto de guardar algo</h3>
-    <span class="card-arrow">↗</span>
-  </a>
-
-  <a href="#" class="card card-8" data-cat="otro">
-    <span class="card-type">Ficción</span>
-    <h3 class="card-title">Inventario de objetos perdidos en mudanzas</h3>
-    <span class="card-arrow">↗</span>
-  </a>
+  <!-- cards cargadas dinámicamente -->
+  <div id="cards-container"></div>
 </section>
 
 <!-- CONTACTO -->
@@ -602,7 +562,87 @@
     });
   }
 
-  // Board filters — hover highlights matching cards
+  // ── CARGAR ENTRADAS DESDE GITHUB ──
+  const GITHUB_USER = 'guerendiainbjuana-alt';
+  const GITHUB_REPO = 'en-la-esquina-del-mapa';
+  const API = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/_proyectos`;
+
+  const rotations = [-1.8, 2.5, 1.2, -2, -1.5, 2, -1.2, 1.8, -2.2, 1.5];
+  const positions = [
+    'grid-column: 1 / 3; grid-row: 1; align-self: end;',
+    'grid-column: 5 / 7; grid-row: 1; margin-top: 2rem;',
+    'grid-column: 1 / 3; grid-row: 2; margin-top: -1.5rem;',
+    'grid-column: 5 / 7; grid-row: 2; margin-top: 1rem;',
+    'grid-column: 1 / 3; grid-row: 3; margin-top: -1rem;',
+    'grid-column: 3 / 5; grid-row: 3; margin-top: 2rem;',
+    'grid-column: 5 / 6; grid-row: 3;',
+    'grid-column: 6 / 7; grid-row: 1; margin-top: 4rem;',
+    'grid-column: 2 / 4; grid-row: 1; margin-top: 1rem;',
+    'grid-column: 4 / 6; grid-row: 3; margin-top: -0.5rem;',
+  ];
+
+  function parseFrontmatter(text) {
+    const match = text.match(/^---\n([\s\S]*?)\n---/);
+    if (!match) return {};
+    const fm = {};
+    match[1].split('\n').forEach(line => {
+      const [key, ...val] = line.split(':');
+      if (key && val.length) fm[key.trim()] = val.join(':').trim().replace(/^["']|["']$/g, '');
+    });
+    return fm;
+  }
+
+  async function cargarEntradas() {
+    const container = document.getElementById('cards-container');
+    try {
+      const res = await fetch(API);
+      if (!res.ok) return;
+      const files = await res.json();
+      const mdFiles = files.filter(f => f.name.endsWith('.md'));
+
+      for (let i = 0; i < mdFiles.length; i++) {
+        const fileRes = await fetch(mdFiles[i].download_url);
+        const text = await fileRes.text();
+        const fm = parseFrontmatter(text);
+        const titulo = fm.titulo || fm.title || 'Sin título';
+        const categoria = fm.categoria || fm.category || 'otro';
+        const imagen = fm.imagen || fm.image || '';
+        const rot = rotations[i % rotations.length];
+        const pos = positions[i % positions.length];
+        const slug = mdFiles[i].name.replace('.md', '');
+
+        let cardHTML;
+        if (imagen) {
+          cardHTML = `
+            <a href="/entradas/${slug}.html" class="card card-img" data-cat="${categoria}"
+               style="${pos} transform: rotate(${rot}deg);">
+              <div class="card-ph" style="background: url('${imagen}') center/cover no-repeat; min-height: 140px;"></div>
+              <span class="card-caption">${titulo}</span>
+            </a>`;
+        } else {
+          cardHTML = `
+            <a href="/entradas/${slug}.html" class="card" data-cat="${categoria}"
+               style="${pos} transform: rotate(${rot}deg);">
+              <span class="card-type">${categoria}</span>
+              <h3 class="card-title">${titulo}</h3>
+              <span class="card-arrow">↗</span>
+            </a>`;
+        }
+        container.insertAdjacentHTML('beforeend', cardHTML);
+      }
+
+      // re-registrar hover del cursor en las nuevas cards
+      document.querySelectorAll('.card').forEach(el => {
+        el.addEventListener('mouseenter', () => cur.classList.add('hover'));
+        el.addEventListener('mouseleave', () => cur.classList.remove('hover'));
+      });
+
+    } catch(e) {
+      console.log('No se pudieron cargar entradas:', e);
+    }
+  }
+
+  cargarEntradas();
   const board = document.getElementById('contenido');
   document.querySelectorAll('.bf').forEach(btn => {
     btn.addEventListener('mouseenter', () => {
