@@ -403,7 +403,20 @@
     .modal-cat {
       font-family: 'Courier Prime', monospace;
       font-size: 0.5rem; letter-spacing: 0.35em; text-transform: uppercase;
-      color: var(--grey); margin-bottom: 1.5rem; display: block;
+      color: var(--grey); display: block;
+      padding-left: 2rem;
+      border-left: 1.5px solid var(--warm);
+      align-self: flex-end;
+      padding-bottom: 0.6rem;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-end;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      border-bottom: 1.5px solid var(--ink);
+      padding-bottom: 2rem;
     }
 
     .modal-title {
@@ -411,9 +424,7 @@
       font-size: clamp(3rem, 7vw, 7rem);
       font-weight: 700; line-height: 0.95;
       text-transform: uppercase; color: var(--ink);
-      margin-bottom: 3rem;
-      border-bottom: 1.5px solid var(--ink);
-      padding-bottom: 2rem;
+      flex: 1;
     }
 
     .modal-body {
@@ -547,8 +558,10 @@
 <!-- MODAL ENTRADA -->
 <div class="modal-overlay" id="modal">
   <button class="modal-close" id="modal-close">← Volver</button>
-  <span class="modal-cat" id="modal-cat"></span>
-  <h1 class="modal-title" id="modal-title"></h1>
+  <div class="modal-header">
+    <h1 class="modal-title" id="modal-title"></h1>
+    <span class="modal-cat" id="modal-cat"></span>
+  </div>
   <div class="modal-body" id="modal-body"></div>
 </div>
 
