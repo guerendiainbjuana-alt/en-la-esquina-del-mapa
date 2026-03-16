@@ -3,6 +3,7 @@ backend:
   branch: main
 
 media_folder: "images"
+public_folder: "/images"
 
 collections:
   - name: "proyectos"
@@ -12,5 +13,6 @@ collections:
     fields:
       - { label: "Título", name: "titulo", widget: "string" }
       - { label: "Categoría", name: "categoria", widget: "select", options: ["ensayito", "ficcion", "collage", "dibujo", "otro"] }
-      - { label: "Imagen", name: "imagen", widget: "image", required: false }
+      - { label: "Imagen", name: "imagen", widget: "image", required: true }
+      - { label: "Pie de imagen", name: "pie_imagen", widget: "string", required: false }
       - { label: "Contenido", name: "body", widget: "markdown" }
