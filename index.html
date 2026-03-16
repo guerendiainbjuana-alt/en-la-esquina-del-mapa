@@ -85,7 +85,7 @@
 
     .hero-subnav-item {
       font-family: 'Courier Prime', monospace;
-      font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase;
+      font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
       color: var(--grey); text-decoration: none;
       padding: 0.75rem 1rem;
       text-align: center;
@@ -344,7 +344,7 @@
 
     .c-sub {
       font-family: 'Libre Baskerville', serif;
-      font-style: italic; font-size: 0.82rem;
+      font-style: italic; font-size: 0.97rem;
       color: var(--grey); line-height: 1.7;
       max-width: 38ch;
     }
@@ -353,7 +353,7 @@
     .f-label {
       display: block;
       font-family: 'Courier Prime', monospace;
-      font-size: 0.44rem; letter-spacing: 0.3em; text-transform: uppercase;
+      font-size: 0.59rem; letter-spacing: 0.3em; text-transform: uppercase;
       color: var(--grey); margin-bottom: 0.4rem;
     }
 
@@ -528,7 +528,7 @@
     <h2 class="about-title">¿Qué<br>es esto?</h2>
   </div>
   <div class="about-content reveal">
-    <p class="about-text">Todavía no lo tengo muy claro, pero algo para ir compartiendo las maneras en las que materializo mis dudas.<br><br>Ni idea, im just a persona del siglo XXI que quiere tener su lugar de expresión.<br><br>Qué intensos somos.</p>
+    <p class="about-text">Todavía no lo tengo del todo claro, im just a persona del siglo XXI que quiere tener su lugar para expresarse (qué intensos).<br><br>Escribo algunas cosas para ver qué les parece.</p>
   </div>
 </section>
 
@@ -571,7 +571,7 @@
       <label class="f-label" for="mensaje">Mensaje</label>
       <textarea id="mensaje" class="f-textarea" placeholder="escribí acá..."></textarea>
     </div>
-    <button class="f-submit">Enviar →</button>
+    <button class="f-submit" id="f-submit-btn">Enviar →</button>
   </div>
 </section>
 
@@ -612,7 +612,13 @@
   }
   window.addEventListener('resize', fitSvgTitle);
 
-  // Netlify Identity
+  // Contacto → mailto
+  document.getElementById('f-submit-btn').addEventListener('click', () => {
+    const msg = document.getElementById('mensaje').value.trim();
+    if (!msg) return;
+    const mailtoLink = `mailto:guerendiainbjuana@gmail.com?subject=Mensaje desde En la esquina del mapa&body=${encodeURIComponent(msg)}`;
+    window.location.href = mailtoLink;
+  });
   if (window.netlifyIdentity) {
     window.netlifyIdentity.init();
     window.netlifyIdentity.on("init", user => {
