@@ -566,12 +566,15 @@
     <h2 class="c-title">Contacto</h2>
   </div>
   <div class="c-right reveal">
+    <form name="contacto" method="POST" data-netlify="true" style="display:contents">
     <p class="c-sub">Si querés decir, sugerir o comentar algo sobre lo que leíste o viste, escribime acá.</p>
     <div class="f-group">
       <label class="f-label" for="mensaje">Mensaje</label>
-      <textarea id="mensaje" class="f-textarea" placeholder="escribí acá..."></textarea>
+      <textarea id="mensaje" name="mensaje" class="f-textarea" placeholder="escribí acá..."></textarea>
     </div>
-    <button class="f-submit" id="f-submit-btn">Enviar →</button>
+    <input type="hidden" name="form-name" value="contacto">
+    <button type="submit" class="f-submit">Enviar →</button>
+    </form>
   </div>
 </section>
 
@@ -612,13 +615,6 @@
   }
   window.addEventListener('resize', fitSvgTitle);
 
-  // Contacto → mailto
-  document.getElementById('f-submit-btn').addEventListener('click', () => {
-    const msg = document.getElementById('mensaje').value.trim();
-    if (!msg) return;
-    const mailtoLink = `mailto:guerendiainbjuana@gmail.com?subject=Mensaje desde En la esquina del mapa&body=${encodeURIComponent(msg)}`;
-    window.location.href = mailtoLink;
-  });
   if (window.netlifyIdentity) {
     window.netlifyIdentity.init();
     window.netlifyIdentity.on("init", user => {
