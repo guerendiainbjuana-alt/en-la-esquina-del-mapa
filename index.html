@@ -573,7 +573,10 @@
       <textarea id="mensaje" name="mensaje" class="f-textarea" placeholder="escribí acá..."></textarea>
     </div>
     <input type="hidden" name="form-name" value="contacto">
-    <button type="submit" class="f-submit">Enviar →</button>
+    <button type="submit" class="f-submit" id="f-submit-btn">Enviar →</button>
+    <p class="f-thanks" id="f-thanks" style="display:none; font-family:'Courier Prime',monospace; font-size:0.65rem; letter-spacing:0.15em; color:var(--ink); margin-top:1rem;">
+      AMOOO — gracias por tu mensaje!!!! seguro lo lea hoy o a lo sumo mañana :))
+    </p>
     </form>
   </div>
 </section>
@@ -614,6 +617,19 @@
     setTimeout(fitSvgTitle, 500);
   }
   window.addEventListener('resize', fitSvgTitle);
+
+  // Contacto — envío con cartelito
+  const contactForm = document.querySelector('form[name="contacto"]');
+  if (contactForm) {
+    contactForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const data = new FormData(contactForm);
+      await fetch('/', { method: 'POST', body: data });
+      document.getElementById('mensaje').value = '';
+      document.getElementById('f-submit-btn').style.display = 'none';
+      document.getElementById('f-thanks').style.display = 'block';
+    });
+  }
 
   if (window.netlifyIdentity) {
     window.netlifyIdentity.init();
